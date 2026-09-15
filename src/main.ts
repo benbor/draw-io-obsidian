@@ -61,8 +61,8 @@ export default class DrawioPlugin extends Plugin {
 		if (options?.file?.path) {
 			const existingLeaves = workspace.getLeavesOfType(ViewType);
 			for (const l of existingLeaves) {
-				const currentLeafState = l.getViewState();
-				if (currentLeafState.state?.file?.path === options.file.path) {
+				const currentLeafState = l.getViewState().state as { file?: { path?: string } } | undefined;
+				if (currentLeafState?.file?.path === options.file.path) {
 					leaf = l;
 					break;
 				}

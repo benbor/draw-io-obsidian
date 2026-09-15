@@ -1,7 +1,7 @@
 import { t } from "locales/I18n";
 import DrawioPlugin from "main";
 import { App, Editor, MarkdownView, normalizePath, Notice, TFile, WorkspaceLeaf } from "obsidian";
-import { savingNameFileFormatOption } from "Settings/settings";
+import { diagramTheme, savingNameFileFormatOption } from "Settings/settings";
 import { SetFileNameModal } from "Views/SetFileNameModal";
 
 export class pluginUtils {
@@ -164,40 +164,35 @@ export class pluginUtils {
         });
     }
 
-    setDiagramsTheme(mode: "editMode" | "previewMode" | "canvasMode") {
-
-        if (mode === "previewMode") {
-            switch (this.plugin.settings.diagramThemeInPreviewMode) {
-                case "auto": {
-                    if (document.body.hasClass("theme-light")) return "drawio-diagrams--lightTheme";
-                    if (document.body.hasClass("theme-dark")) return "drawio-diagrams--darkTheme";
-                };
-                case "light": return "drawio-diagrams--lightTheme";
-                case "dark": return "drawio-diagrams--darkTheme";
+    setDiagramsTheme(mode: "editMode" | "previewMode" | "canvasMode"): string {
+        const themeClasses: Record<typeof mode, { light: string, dark: string }> = {
+            previewMode: {
+                light: "drawio-diagrams--lightTheme",
+                dark: "drawio-diagrams--darkTheme"
+            },
+            editMode: {
+                light: "drawio-diagram--editmode--lightTheme",
+                dark: "drawio-diagram--editmode--darkTheme"
+            },
+            canvasMode: {
+                light: "drawio-diagram--canvasMode--lightTheme",
+                dark: "drawio-diagram--canvasMode--darkTheme"
             }
-        }
+        };
 
-        if (mode === "editMode") {
-            switch (this.plugin.settings.diagramThemeInEditMode) {
-                case "auto": {
-                    if (document.body.hasClass("theme-light")) return "drawio-diagram--editmode--lightTheme";
-                    if (document.body.hasClass("theme-dark")) return "drawio-diagram--editmode--darkTheme";
-                };
-                case "light": return "drawio-diagram--editmode--lightTheme";
-                case "dark": return "drawio-diagram--editmode--darkTheme";
-            }
-        }
+        const themeSettings: Record<typeof mode, diagramTheme> = {
+            previewMode: this.plugin.settings.diagramThemeInPreviewMode,
+            editMode: this.plugin.settings.diagramThemeInEditMode,
+            canvasMode: this.plugin.settings.diagramThemeInCanvas
+        };
 
-        if (mode === "canvasMode") {
-            switch (this.plugin.settings.diagramThemeInCanvas) {
-                case "auto": {
-                    if (document.body.hasClass("theme-light")) return "drawio-diagram--canvasMode--lightTheme";
-                    if (document.body.hasClass("theme-dark")) return "drawio-diagram--canvasMode--darkTheme";
-                };
-                case "light": return "drawio-diagram--canvasMode--lightTheme";
-                case "dark": return "drawio-diagram--canvasMode--darkTheme";
-            }
-        }
+        const classes = themeClasses[mode];
+        const theme = themeSettings[mode];
+
+        if (theme === "light") return classes.light;
+        if (theme === "dark") return classes.dark;
+
+        return document.body.hasClass("theme-dark") ? classes.dark : classes.light;
     }
 
     async copySvgAsPng(file: TFile): Promise<void> {

@@ -19,7 +19,7 @@ function copyPluginAssets() {
 	mkdirSync(BUILD_DIR, { recursive: true });
 	copyFileSync("manifest.json", `${BUILD_DIR}/manifest.json`);
 	copyFileSync("styles.css", `${BUILD_DIR}/styles.css`);
-	copyFileSync(".gitignore-release", `${BUILD_DIR}/.gitignore-release`);
+	copyFileSync(".gitignore-release", `${BUILD_DIR}/.gitignore`);
 }
 
 const copyAssetsPlugin = {
