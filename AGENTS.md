@@ -21,13 +21,19 @@
 npm install
 ```
 
-### Dev (watch)
+### Dev (watch, unminified → `dist/`)
 
 ```bash
 npm run dev
 ```
 
-### Production build
+### Dev build (one-shot, unminified → `dist/`)
+
+```bash
+npm run build:dev
+```
+
+### Production build (minified → `dist/`)
 
 ```bash
 npm run build
